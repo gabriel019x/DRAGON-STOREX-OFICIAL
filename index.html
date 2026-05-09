@@ -228,10 +228,8 @@
     </div>
     <div class="messages" id="messages"></div>
   </div>
-
   <audio id="receiveSound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-drip-drop-141.mp3"></audio>
   <audio id="sendSound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-single-water-drop-140.mp3"></audio>
-
   <script>
     const messagesContainer = document.getElementById('messages');
     const typingIndicator = document.getElementById('typingIndicator');
@@ -239,15 +237,12 @@
     const sendAudio = document.getElementById('sendSound');
     let selectedDevice = '';
     let selectedType = '';
-
     function showTyping() {
       typingIndicator.style.display = 'inline';
     }
-
     function hideTyping() {
       typingIndicator.style.display = 'none';
     }
-
     async function addMessage(content, type = 'bot') {
       if (type === 'bot' || type === 'system') showTyping();
       await new Promise(resolve => setTimeout(resolve, type === 'bot' ? 1800 : 0));
@@ -262,7 +257,6 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       (type === 'user' ? sendAudio : receiveAudio).play().catch(() => {});
     }
-
     function addButtons(options, callback, isCentered = false) {
       const container = document.createElement('div');
       container.classList.add('buttons-row');
@@ -282,17 +276,15 @@
       messagesContainer.appendChild(container);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-
     async function addVideo(url) {
       await addMessage('Enviando vídeo demonstrativo... aguarde um momento 👇', 'bot');
       const div = document.createElement('div');
       div.classList.add('video-container');
-      div.innerHTML = `<iframe width="100%" height="200" src="${url}" frameborder="0" allowfullscreen></iframe>`;
+      div.innerHTML = `<iframe width="100%" height="200" src="${url}" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>`;
       messagesContainer.appendChild(div);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       receiveAudio.play().catch(() => {});
     }
-
     async function addPriceImage(src) {
       await addMessage('Aqui está a tabela de preços 🔥', 'bot');
       const img = document.createElement('img');
@@ -303,7 +295,6 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       receiveAudio.play().catch(() => {});
     }
-
     async function addFinalMessage() {
       await addMessage('Pronto! Agora é só efetuar o pagamento e enviar o comprovante.', 'bot');
       const div = document.createElement('div');
@@ -316,17 +307,14 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       receiveAudio.play().catch(() => {});
     }
-
     (async () => {
       const dateDiv = document.createElement('div');
       dateDiv.classList.add('date');
       dateDiv.textContent = 'Hoje';
       messagesContainer.appendChild(dateDiv);
-
       await addMessage('Essa empresa usa uma Conta Comercial verificada pela meta', 'system');
       await addMessage('🏆 PARABÉNS! Você está entre os 100 primeiros que garantiram seu cupom de desconto na compra do XIT VIP! 🔥');
       await addMessage('Para resgatar seu cupom, basta selecionar abaixo qual é o seu dispositivo:');
-
       addButtons([
         { label: 'ANDROID', value: 'android' },
         { label: 'iOS', value: 'ios' },
@@ -335,7 +323,6 @@
         selectedDevice = value;
         if (value === 'android') {
           await addMessage('PARA ANDROID TEMOS');
-
           addButtons([
             { label: 'XIT FULL VERMELHO', value: 'full_vermelho', emoji: '✅' },
             { label: 'XIT 97% INJECTO', value: '97_injecto', emoji: '✅' }
@@ -343,7 +330,6 @@
             selectedType = subValue;
             await showDemo();
           }, false);
-
           setTimeout(async () => {
             addButtons([
               { label: 'PAINEL PRO', value: 'painel_pro', emoji: '✅' }
@@ -357,34 +343,30 @@
         }
       });
     })();
-
     async function showDemo() {
       await addMessage('✅ Seu CUPOM foi resgatado com sucesso!');
       await addMessage('Agora, vou te enviar um vídeo demonstrativo. Assiste com atenção para ver o produto na prática! 👇');
-
-      let videoId = '';
+      
+      let videoUrl = '';
       let isPainelPro = selectedType === 'painel_pro';
-
+      
       if (selectedDevice === 'android') {
-        if (isPainelPro) videoId = '659fRKM2CkE';
-        else if (selectedType === 'full_vermelho') videoId = '52dx1JR6zYw';
-        else videoId = 'VpxMMf2rPpo';
+        if (isPainelPro) videoUrl = 'https://player.vimeo.com/video/1190659149';
+        else if (selectedType === 'full_vermelho') videoUrl = 'https://player.vimeo.com/video/1190678207';
+        else videoUrl = 'https://player.vimeo.com/video/1190670041';
       } else if (selectedDevice === 'ios') {
-        videoId = '1OxUfaQLXl0';
+        videoUrl = 'https://player.vimeo.com/video/1190678207';
       } else {
-        videoId = 'xuTTdVt2gS0';
+        videoUrl = 'https://player.vimeo.com/video/1190669968';
       }
-
-      await addVideo(`https://www.youtube.com/embed/${videoId}`);
-
+      
+      await addVideo(videoUrl);
       await addMessage('E aí, gostou? Ficou interessado? Se sim, é só clicar no botão abaixo para conferir os valores. 👇');
       addButtons([{ label: 'VALORES', value: 'valores', emoji: '🔥' }], async () => await showValues());
     }
-
     async function showValues() {
       let imgSrc = '';
       let isPainelPro = selectedType === 'painel_pro';
-
       if (selectedDevice === 'android') {
         if (isPainelPro) {
           imgSrc = 'https://i.imgur.com/H3eaKbD.png';
@@ -396,9 +378,7 @@
       } else {
         imgSrc = 'https://i.imgur.com/LZ3HIjG.png';
       }
-
       await addPriceImage(imgSrc);
-
       const callback = async (value) => {
         if (value === 'feedbacks') {
           window.open('https://www.instagram.com/dragonstorex/', '_blank');
@@ -424,7 +404,6 @@
           await addFinalMessage();
         }
       };
-
       addButtons([
         { label: 'PAGAMENTO', value: 'pagamento', emoji: '💳' },
         { label: 'FEEDBACKS', value: 'feedbacks', emoji: '⭐' }
